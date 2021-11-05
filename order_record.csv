@@ -1,0 +1,8 @@
+id,date,items,total_price
+1636108956,2021-11-05 18:42:35,"['Americano', 'Americano', 'Americano', 'Espresso', 'Cafe Latte']",50
+1636108992,2021-11-05 18:43:11,['Americano'],10
+1636115630,2021-11-05 20:33:50,"['Cappuccino', 'Cappuccino', 'Cappuccino']",45
+1636115650,2021-11-05 20:34:09,['Americano'],10
+1636116719,2021-11-05 20:51:58,"['Cappuccino', 'Espresso', 'Espresso', 'Espresso', 'Espresso']",47
+1636121234,2021-11-05 22:07:14,"['Americano', 'Americano']",20
+1636121241,2021-11-05 22:07:20,"['Espresso', 'Espresso']",16
