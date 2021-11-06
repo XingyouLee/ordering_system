@@ -29,4 +29,10 @@ import numpy as np
 #
 # print(df_new)
 item_data = pd.read_csv('items_category.csv')
-print(item_data[0]["name"])
+item_data = np.array(item_data)
+for i in item_data:
+    if i[0] == "Americano":
+        i[1] = 100
+item_data = pd.DataFrame(item_data)
+item_data.columns = ["name","price","water","coco","milk","sugar","cheese"]
+print(item_data)

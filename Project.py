@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 import time
 
+
 class Item(object):
 
     def __init__(self, name, price, water, coco, milk, sugar, cheese):
@@ -31,21 +32,24 @@ class Storage(object):
         self.cheese = cheese
 
 
-item_data = pd.read_csv('items_category.csv')
-item_menu = []
-data = np.array(item_data)
+def check_info():
+    item_data = pd.read_csv('items_category.csv')
+    item_menu = []
+    item_data = np.array(item_data)
 
-# for row in f_csv:
-#     print(np.size(row))
-for i in data:
-    # item_menu.append(Item(i[0], int(i[1]), int(i[2]), int(i[3]), int(i[4]), int(i[5]), int(i[6])))
-    item_menu.append(Item(i[0], i[1], i[2], i[3], i[4], i[5], i[6]))
+    # for row in f_csv:
+    #     print(np.size(row))
+    for i in item_data:
+        # item_menu.append(Item(i[0], int(i[1]), int(i[2]), int(i[3]), int(i[4]), int(i[5]), int(i[6])))
+        item_menu.append(Item(i[0], i[1], i[2], i[3], i[4], i[5], i[6]))
 
-storage_data = pd.read_csv('material_storage.csv')
+    storage_data = pd.read_csv('material_storage.csv')
 
-data = np.array(storage_data)
+    data = np.array(storage_data)
 
-storage = Storage(data[0][0],data[0][1],data[0][2],data[0][3],data[0][4])
+    storage = Storage(data[0][0], data[0][1], data[0][2], data[0][3], data[0][4])
+
+    return item_data, item_menu, storage
 
 
 # Americano = Item("Americano", 10, 3, 1, 0, 0, 0)  # name, price, water, coco, milk, sugar, cheese
@@ -70,9 +74,7 @@ def imagemaker(path, sizex, sizey):
     return ImageTk.PhotoImage(im)
 
 
-
 login_status = 0
-
 
 
 def login_info():
@@ -99,35 +101,47 @@ def login_info():
 
 def info_command():
     frame_home.place_forget()
+    item_data, item_menu, storage = check_info()
+
 
     def return_command():
         frame_info.place_forget()
         frame_home.place(x=20, y=5)
         items_choices.destroy()
-
-
+        
 
     def change_item(item):
+
         def confirm_change():
-            print(item.name)
             # item.price = e1.get()
             # item.water = e2.get()
             # item.coco = e3.get()
             # item.milk = e4.get()
             # item.sugar = e5.get()
             # item.cheese = e6.get()
-            print(e1.get(),e2.get(),e3.get(),e4.get(),e5.get(),e6.get())
-            for index,row in item_data.iterrows():
-                if row["name"] == item.name:
-                    row["price"] = int(e1.get())
-                    row["water"] = int(e2.get())
-                    row["coco"] = int(e3.get())
-                    row["milk"] = int(e4.get())
-                    row["sugar"] = int(e5.get())
-                    row["cheese"] = int(e6.get())
-                    # df = pd.DataFrame(item_data)
-                    print(item_data)
-                    item_data.to_csv("item_category.csv", index=0)
+            # print(e1.get(),e2.get(),e3.get(),e4.get(),e5.get(),e6.get())
+            # for i in range(len(item_data["name"])):
+            #     if item_data["name"][i] == item.name:
+            #         item_data["price"][i] = int(e1.get())
+            #         item_data["water"][i] = int(e2.get())
+            #         item_data["coco"][i] = int(e3.get())
+            #         item_data["milk"][i] = int(e4.get())
+            #         item_data["sugar"][i] = int(e5.get())
+            #         item_data["cheese"][i] = int(e6.get())
+            #         # df = pd.DataFrame(item_data)
+            #         item_data.to_csv("item_category.csv", index=0)
+            #         break
+            for i in item_data:
+                if i[0] == item.name:
+                    i[1] = int(e1.get())
+                    i[2] = int(e2.get())
+                    i[3] = int(e3.get())
+                    i[4] = int(e4.get())
+                    i[5] = int(e5.get())
+                    i[6] = int(e6.get())
+                    data_new = pd.DataFrame(item_data)
+                    data_new.columns = ["name", "price", "water", "coco", "milk", "sugar", "cheese"]
+                    data_new.to_csv("items_category.csv", index=0)
                     break
 
         price_info = item.price
@@ -141,27 +155,27 @@ def info_command():
         top.title("Change the info")
         top.geometry("800x400")
         label_frame = tk.Frame(top, pady=5)
-        price_label = tk.Label(label_frame, text = "price ")
+        price_label = tk.Label(label_frame, text="price ")
         price_label.grid(row=2, column=2)
 
         default_water = tk.StringVar(value=water_info)
-        water_label = tk.Label(label_frame, text = "water ")
+        water_label = tk.Label(label_frame, text="water ")
         water_label.grid(row=3, column=2)
 
         default_coco = tk.StringVar(value=coco_info)
-        coco_label = tk.Label(label_frame, text = "coco ")
+        coco_label = tk.Label(label_frame, text="coco ")
         coco_label.grid(row=4, column=2)
 
         default_milk = tk.StringVar(value=milk_info)
-        milk_label = tk.Label(label_frame, text = "milk ")
+        milk_label = tk.Label(label_frame, text="milk ")
         milk_label.grid(row=5, column=2)
 
         default_sugar = tk.StringVar(value=sugar_info)
-        sugar_label = tk.Label(label_frame, text = "sugar ")
+        sugar_label = tk.Label(label_frame, text="sugar ")
         sugar_label.grid(row=6, column=2)
 
         default_cheese = tk.StringVar(value=cheese_info)
-        cheese_label = tk.Label(label_frame, text = "cheese ")
+        cheese_label = tk.Label(label_frame, text="cheese ")
         cheese_label.grid(row=7, column=2)
 
         default_price = tk.StringVar(value=price_info)
@@ -183,9 +197,6 @@ def info_command():
         check_button.place(x=350, y=300)
         label_frame.place(x=50, y=50)
 
-
-
-
     frame_info = tk.Frame(root)
     return_b = tk.Button(frame_info, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
@@ -193,15 +204,14 @@ def info_command():
     ButtonList = [0 for i in range(len(item_menu))]
     for i in range(len(item_menu)):
         ButtonList[i] = tk.Button(items_choices, width=30, height=3, text=item_menu[i].name + "   $"
-                                  + str(item_menu[i].price) + "\n" + "water: " + str(item_menu[i].water) + " coco: " + str(item_menu[i].coco)
-                                  + " milk: " + str(item_menu[i].milk) + " sugar: " + str(item_menu[i].sugar) + " cheese: " + str(item_menu[i].cheese),
+                                                                          + str(
+            item_menu[i].price) + "\n" + "water: " + str(item_menu[i].water) + " coco: " + str(item_menu[i].coco)
+                                                                          + " milk: " + str(
+            item_menu[i].milk) + " sugar: " + str(item_menu[i].sugar) + " cheese: " + str(item_menu[i].cheese),
                                   command=lambda f=item_menu[i]: change_item(f))
         ButtonList[i].grid()
 
     items_choices.place(x=150, y=10)
-
-
-
 
     frame_info.place(x=20, y=5)
 
@@ -214,15 +224,13 @@ def contact_command():
 
         frame_home.place(x=20, y=5)
 
-
-
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
 
 
-
 def buy_command():
     frame_home.place_forget()
+    item_data, item_menu, storage = check_info()
     global ItemOrderList
     ItemOrderList = []
 
@@ -284,14 +292,11 @@ def buy_command():
 
         df_new.to_csv("order_record.csv", index=0)
 
-
     def clear_ordering_list():
         global ItemOrderList
         order_list.delete(0, "end")
         ItemOrderList = []
         count_total_price()
-
-
 
     def order_the_list():
         total_price = 0
@@ -307,9 +312,7 @@ def buy_command():
         update_storage(storage)
         update_order()
 
-
         clear_ordering_list()
-
 
     order_list_frame = tk.Frame(root)
     order_list = tk.Listbox(order_list_frame, height=11)
