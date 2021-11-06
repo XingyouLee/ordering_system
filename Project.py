@@ -8,6 +8,10 @@ import csv
 import numpy as np
 import pandas as pd
 import time
+import re
+import matplotlib.pyplot as plt
+import matplotlib
+
 
 
 class Item(object):
@@ -52,11 +56,7 @@ def check_info():
     return item_data, item_menu, storage
 
 
-# Americano = Item("Americano", 10, 3, 1, 0, 0, 0)  # name, price, water, coco, milk, sugar, cheese
-# 
-# Cappuccino = Item("Cappuccino", 15, 3, 1, 1, 1, 1)
-# 
-# item_menu = [Americano, Cappuccino]
+
 def update_storage(storage):
     headers = ["water", "coco", "milk", "sugar", "cheese"]
 
@@ -182,10 +182,9 @@ def info_command():
         check_button.place(x=350, y=300)
         label_frame.place(x=50, y=50)
 
-    frame_info = tk.Frame(root)
-    return_b = tk.Button(frame_info, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
+    return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
-
+    frame_info = tk.Frame(root)
     items_choices = tk.Frame(root)
     ButtonList = [0 for i in range(len(item_menu))]
     for i in range(len(item_menu)):
@@ -252,16 +251,45 @@ def info_command():
 
 
 def rank_command():
-    frame_home.place_forget()
+    # frame_home.place_forget()
 
     def return_command():
         return_b.grid_forget()
-
+        img_label.destroy()
         frame_home.place(x=20, y=5)
 
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
 
+    record = pd.read_csv('order_record.csv')
+    data = np.array2string(np.array(record["items"]))
+    item_data, item_menu, storage = check_info()
+    rank_info = {}
+    for i in item_menu:
+        ret = re.findall(i.name, data)
+        rank_info.update({i.name: len(ret)})
+    rank_info_ordered = sorted(rank_info.items(), key=lambda x:x[1], reverse=False)
+    # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+    # matplotlib.rcParams['axes.unicode_minus'] = False
+    count = []
+    tick = []
+    for i in rank_info_ordered:
+        count.append(i[1])
+        tick.append(i[0])
+
+    plt.figure(figsize=(5, 5))
+    plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
+    plt.yticks(range(len(count)), tick)
+    plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
+    plt.xlabel("count")
+    plt.title("Ranking")
+    for x, y in enumerate(count):
+        plt.text(y + 0.2, x - 0.1, '%s' % y)
+    # plt.savefig("rank_img.jpg")
+    # a = imagemaker("rank_img.jpg", 250, 200)
+    # img_label = tk.Button(root, image = a, width=1000, height=600, padx=10, pady=10)
+    # img_label.grid()
+    plt.show()
 
 def buy_command():
     frame_home.place_forget()

@@ -8,3 +8,4 @@ id,date,items,total_price
 1636121241,2021-11-05 22:07:20,"['Espresso', 'Espresso']",16
 1636170564,2021-11-06 11:49:24,"['Americano', 'Americano']",20
 1636170578,2021-11-06 11:49:38,['Americano'],10
+1636176583,2021-11-06 13:29:42,"['Cafe Latte', 'Cafe Latte']",24
