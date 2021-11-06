@@ -13,7 +13,6 @@ import matplotlib.pyplot as plt
 import matplotlib
 
 
-
 class Item(object):
 
     def __init__(self, name, price, water, coco, milk, sugar, cheese):
@@ -54,7 +53,6 @@ def check_info():
     storage = Storage(data[0][0], data[0][1], data[0][2], data[0][3], data[0][4])
 
     return item_data, item_menu, storage
-
 
 
 def update_storage(storage):
@@ -104,6 +102,7 @@ def info_command():
     item_data, item_menu, storage = check_info()
 
     def return_command():
+        return_b.grid_forget()
         frame_info.place_forget()
         frame_home.place(x=20, y=5)
         items_choices.destroy()
@@ -198,12 +197,12 @@ def info_command():
 
     items_choices.place(x=150, y=10)
     frame_info.place(x=20, y=5)
+
     def confirm_storage_change():
         data = np.array([[int(e11.get()), int(e22.get()), int(e33.get()), int(e44.get()), int(e55.get())]])
         data_new = pd.DataFrame(data)
         data_new.columns = ["water", "coco", "milk", "sugar", "cheese"]
         data_new.to_csv("material_storage.csv", index=0)
-
 
     storage_water_info = storage.water
     storage_coco_info = storage.coco
@@ -248,15 +247,14 @@ def info_command():
     storage_frame.place(x=800, y=50)
 
 
-
-
 def rank_command():
-    # frame_home.place_forget()
+    frame_home.place_forget()
 
     def return_command():
         return_b.grid_forget()
-        img_label.destroy()
+        rank_frame.destroy()
         frame_home.place(x=20, y=5)
+
 
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
@@ -268,7 +266,7 @@ def rank_command():
     for i in item_menu:
         ret = re.findall(i.name, data)
         rank_info.update({i.name: len(ret)})
-    rank_info_ordered = sorted(rank_info.items(), key=lambda x:x[1], reverse=False)
+    rank_info_ordered = sorted(rank_info.items(), key=lambda x: x[1], reverse=False)
     # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
     # matplotlib.rcParams['axes.unicode_minus'] = False
     count = []
@@ -277,7 +275,7 @@ def rank_command():
         count.append(i[1])
         tick.append(i[0])
 
-    plt.figure(figsize=(5, 5))
+    plt.figure(figsize=(7, 7))
     plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
     plt.yticks(range(len(count)), tick)
     plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
@@ -285,11 +283,15 @@ def rank_command():
     plt.title("Ranking")
     for x, y in enumerate(count):
         plt.text(y + 0.2, x - 0.1, '%s' % y)
-    # plt.savefig("rank_img.jpg")
-    # a = imagemaker("rank_img.jpg", 250, 200)
-    # img_label = tk.Button(root, image = a, width=1000, height=600, padx=10, pady=10)
-    # img_label.grid()
-    plt.show()
+    plt.savefig("rank_img.jpg")
+
+    rank_frame = tk.Frame(root)
+    rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+    rank_label = tk.Label(rank_frame,image=rank_img, width=800, height=800, padx=10, pady=10)
+    rank_label.grid(row=5, column=10, padx=10, pady=10)
+    rank_frame.place(x=100, y=0)
+    rank_frame.mainloop() # Or the image will be blank
+
 
 def buy_command():
     frame_home.place_forget()
@@ -398,7 +400,7 @@ def buy_command():
     payment_frame.place(x=800, y=320)
 
 
-def play_command():
+def people_command():
     pass
 
 
@@ -414,20 +416,20 @@ login_button.grid(row=0, column=0)
 
 buy_image = imagemaker("food.png", 250, 200)
 buy_button = tk.Button(frame_home, image=buy_image, command=buy_command, width=250, height=200, padx=10, pady=10)
-buy_button.grid(row=5, column=5, padx=10, pady=10)
+buy_button.grid(row=5, column=1, padx=10, pady=10)
 
 info_image = imagemaker("info.jpg", 250, 200)
 info_button = tk.Button(frame_home, image=info_image, command=info_command, width=250, height=200, padx=10, pady=10)
-info_button.grid(row=5, column=10, padx=10, pady=10)
+info_button.grid(row=5, column=2, padx=10, pady=10)
 
 contact_image = imagemaker("contact.jpg", 250, 200)
-contact_button = tk.Button(frame_home, image=contact_image, command=rank_command, width=250, height=200, padx=10,
-                           pady=10)
-contact_button.grid(row=5, column=12, padx=10, pady=10)
+contact_button = tk.Button(frame_home, image=contact_image, command=rank_command, width=250, height=200, padx=10, pady=10)
+contact_button.grid(row=5, column=3, padx=10, pady=10)
 
-play_button = tk.Button(frame_home, text="PLAY", command=play_command, width=20, height=4, pady=10)
-play_button.grid(row=7, column=10)
+people_image = imagemaker("people.jpg", 250, 200)
+people_button = tk.Button(frame_home, image=people_image, command=people_command, width=250, height=200, padx=10, pady=10)
+people_button.grid(row=5, column=4, padx=10, pady=10)
 
-frame_home.place(x=20, y=5)
-
+frame_home.place(x=0, y=0)
+frame_home.mainloop()
 root.mainloop()
