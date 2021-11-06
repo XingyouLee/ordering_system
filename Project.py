@@ -103,34 +103,15 @@ def info_command():
     frame_home.place_forget()
     item_data, item_menu, storage = check_info()
 
-
     def return_command():
         frame_info.place_forget()
         frame_home.place(x=20, y=5)
         items_choices.destroy()
-        
+        storage_frame.destroy()
 
     def change_item(item):
 
         def confirm_change():
-            # item.price = e1.get()
-            # item.water = e2.get()
-            # item.coco = e3.get()
-            # item.milk = e4.get()
-            # item.sugar = e5.get()
-            # item.cheese = e6.get()
-            # print(e1.get(),e2.get(),e3.get(),e4.get(),e5.get(),e6.get())
-            # for i in range(len(item_data["name"])):
-            #     if item_data["name"][i] == item.name:
-            #         item_data["price"][i] = int(e1.get())
-            #         item_data["water"][i] = int(e2.get())
-            #         item_data["coco"][i] = int(e3.get())
-            #         item_data["milk"][i] = int(e4.get())
-            #         item_data["sugar"][i] = int(e5.get())
-            #         item_data["cheese"][i] = int(e6.get())
-            #         # df = pd.DataFrame(item_data)
-            #         item_data.to_csv("item_category.csv", index=0)
-            #         break
             for i in item_data:
                 if i[0] == item.name:
                     i[1] = int(e1.get())
@@ -143,6 +124,10 @@ def info_command():
                     data_new.columns = ["name", "price", "water", "coco", "milk", "sugar", "cheese"]
                     data_new.to_csv("items_category.csv", index=0)
                     break
+
+            items_choices.destroy()
+            top.destroy()
+            info_command()
 
         price_info = item.price
         water_info = item.water
@@ -200,6 +185,7 @@ def info_command():
     frame_info = tk.Frame(root)
     return_b = tk.Button(frame_info, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
+
     items_choices = tk.Frame(root)
     ButtonList = [0 for i in range(len(item_menu))]
     for i in range(len(item_menu)):
@@ -212,11 +198,60 @@ def info_command():
         ButtonList[i].grid()
 
     items_choices.place(x=150, y=10)
-
     frame_info.place(x=20, y=5)
+    def confirm_storage_change():
+        data = np.array([[int(e11.get()), int(e22.get()), int(e33.get()), int(e44.get()), int(e55.get())]])
+        data_new = pd.DataFrame(data)
+        data_new.columns = ["water", "coco", "milk", "sugar", "cheese"]
+        data_new.to_csv("material_storage.csv", index=0)
 
 
-def contact_command():
+    storage_water_info = storage.water
+    storage_coco_info = storage.coco
+    storage_milk_info = storage.milk
+    storage_sugar_info = storage.sugar
+    storage_cheese_info = storage.cheese
+
+    storage_frame = tk.Frame(root)
+    storage_default_water = tk.StringVar(value=storage_water_info)
+    storage_water_label = tk.Label(storage_frame, text="water ")
+    storage_water_label.grid(row=3, column=2)
+
+    storage_default_coco = tk.StringVar(value=storage_coco_info)
+    storage_coco_label = tk.Label(storage_frame, text="coco ")
+    storage_coco_label.grid(row=4, column=2)
+
+    storage_default_milk = tk.StringVar(value=storage_milk_info)
+    storage_milk_label = tk.Label(storage_frame, text="milk ")
+    storage_milk_label.grid(row=5, column=2)
+
+    storage_default_sugar = tk.StringVar(value=storage_sugar_info)
+    storage_sugar_label = tk.Label(storage_frame, text="sugar ")
+    storage_sugar_label.grid(row=6, column=2)
+
+    storage_default_cheese = tk.StringVar(value=storage_cheese_info)
+    storage_cheese_label = tk.Label(storage_frame, text="cheese ")
+    storage_cheese_label.grid(row=7, column=2)
+
+    e11 = tk.Entry(storage_frame, textvariable=storage_default_water)
+    e11.grid(row=3, column=3)
+    e22 = tk.Entry(storage_frame, textvariable=storage_default_coco)
+    e22.grid(row=4, column=3)
+    e33 = tk.Entry(storage_frame, textvariable=storage_default_milk)
+    e33.grid(row=5, column=3)
+    e44 = tk.Entry(storage_frame, textvariable=storage_default_sugar)
+    e44.grid(row=6, column=3)
+    e55 = tk.Entry(storage_frame, textvariable=storage_default_cheese)
+    e55.grid(row=7, column=3)
+
+    storage_change_button = tk.Button(storage_frame, text="Confirm", width=8, height=5, command=confirm_storage_change)
+    storage_change_button.grid(row=8, column=3)
+    storage_frame.place(x=800, y=50)
+
+
+
+
+def rank_command():
     frame_home.place_forget()
 
     def return_command():
@@ -358,7 +393,7 @@ info_button = tk.Button(frame_home, image=info_image, command=info_command, widt
 info_button.grid(row=5, column=10, padx=10, pady=10)
 
 contact_image = imagemaker("contact.jpg", 250, 200)
-contact_button = tk.Button(frame_home, image=contact_image, command=contact_command, width=250, height=200, padx=10,
+contact_button = tk.Button(frame_home, image=contact_image, command=rank_command, width=250, height=200, padx=10,
                            pady=10)
 contact_button.grid(row=5, column=12, padx=10, pady=10)
 
