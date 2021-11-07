@@ -261,42 +261,85 @@ def rank_command():
         rank_frame.destroy()
         frame_home.place(x=20, y=5)
 
+    def weekly_rank():
+        record = pd.read_csv("order_record.csv")
+        record = record[record["id"]-time.time() < 604800]
+        data = np.array2string(np.array(record["items"]))
+        item_data, item_menu, storage = check_info()
+        rank_info = {}
+        for i in item_menu:
+            ret = re.findall(i.name, data)
+            rank_info.update({i.name: len(ret)})
+        rank_info_ordered = sorted(rank_info.items(), key=lambda x: x[1], reverse=False)
+        # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+        # matplotlib.rcParams['axes.unicode_minus'] = False
+        count = []
+        tick = []
+        for i in rank_info_ordered:
+            count.append(i[1])
+            tick.append(i[0])
+
+        plt.figure(figsize=(7, 7))
+        plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
+        plt.yticks(range(len(count)), tick)
+        plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
+        plt.xlabel("count")
+        plt.title("Ranking")
+        for x, y in enumerate(count):
+            plt.text(y + 0.2, x - 0.1, '%s' % y)
+        plt.savefig("rank_img.jpg")
+
+        rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
+        rank_label.grid(row=0, column=0)
+        rank_frame.place(x=80, y=0)
+        rank_frame.mainloop()  # Or the image will be blank
+
+    def allthetime_rank():
+        record = pd.read_csv("order_record.csv")
+        data = np.array2string(np.array(record["items"]))
+        item_data, item_menu, storage = check_info()
+        rank_info = {}
+        for i in item_menu:
+            ret = re.findall(i.name, data)
+            rank_info.update({i.name: len(ret)})
+        rank_info_ordered = sorted(rank_info.items(), key=lambda x: x[1], reverse=False)
+        # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
+        # matplotlib.rcParams['axes.unicode_minus'] = False
+        count = []
+        tick = []
+        for i in rank_info_ordered:
+            count.append(i[1])
+            tick.append(i[0])
+
+        plt.figure(figsize=(7, 7))
+        plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
+        plt.yticks(range(len(count)), tick)
+        plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
+        plt.xlabel("count")
+        plt.title("Ranking")
+        for x, y in enumerate(count):
+            plt.text(y + 0.2, x - 0.1, '%s' % y)
+        plt.savefig("rank_img.jpg")
+
+        rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
+        rank_label.grid(row=0, column=0)
+        rank_frame.place(x=80, y=0)
+        rank_frame.mainloop()  # Or the image will be blank
+
 
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
-
-    record = pd.read_csv('order_record.csv')
-    data = np.array2string(np.array(record["items"]))
-    item_data, item_menu, storage = check_info()
-    rank_info = {}
-    for i in item_menu:
-        ret = re.findall(i.name, data)
-        rank_info.update({i.name: len(ret)})
-    rank_info_ordered = sorted(rank_info.items(), key=lambda x: x[1], reverse=False)
-    # matplotlib.rcParams['font.sans-serif'] = ['SimHei']
-    # matplotlib.rcParams['axes.unicode_minus'] = False
-    count = []
-    tick = []
-    for i in rank_info_ordered:
-        count.append(i[1])
-        tick.append(i[0])
-
-    plt.figure(figsize=(7, 7))
-    plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
-    plt.yticks(range(len(count)), tick)
-    plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
-    plt.xlabel("count")
-    plt.title("Ranking")
-    for x, y in enumerate(count):
-        plt.text(y + 0.2, x - 0.1, '%s' % y)
-    plt.savefig("rank_img.jpg")
-
     rank_frame = tk.Frame(root)
-    rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
-    rank_label = tk.Label(rank_frame,image=rank_img, width=800, height=800, padx=10, pady=10)
-    rank_label.grid(row=5, column=10, padx=10, pady=10)
-    rank_frame.place(x=100, y=0)
-    rank_frame.mainloop() # Or the image will be blank
+    record = pd.read_csv('order_record.csv')
+    # 两个button
+    weekly_rank = tk.Button(rank_frame, text="Weekly ranking", command=weekly_rank, width=15, height=2)
+    allthetime_rank = tk.Button(rank_frame, text="All the time ranking", command=allthetime_rank, width=15, height=2)
+    weekly_rank.grid(row=1, column=0)
+    allthetime_rank.grid(row=2, column=0)
+    rank_frame.place(x=80, y=0)
+
 
 
 def buy_command():
@@ -480,4 +523,5 @@ def login_command():
     b.place(x=100, y=100)
     login_root.mainloop()
 
-login_command()
+# login_command()
+home_command(0,0)

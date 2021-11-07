@@ -9,3 +9,10 @@ id,date,items,total_price
 1636170564,2021-11-06 11:49:24,"['Americano', 'Americano']",20
 1636170578,2021-11-06 11:49:38,['Americano'],10
 1636176583,2021-11-06 13:29:42,"['Cafe Latte', 'Cafe Latte']",24
+1636274160,2021-11-07 16:35:59,"['Americano', 'Cappuccino', 'Espresso']",33
+1636274161,2021-11-07 16:36:01,"['Americano', 'Americano', 'Cafe Latte', 'Cafe Latte']",44
+1636274163,2021-11-07 16:36:03,"['Cappuccino', 'Cafe Latte', 'Cafe Latte', 'Cafe Latte', 'Espresso', 'Espresso']",67
+1636274166,2021-11-07 16:36:06,"['Cappuccino', 'Espresso']",23
+1636274167,2021-11-07 16:36:07,"['Espresso', 'Espresso']",16
+1636274169,2021-11-07 16:36:08,"['Cappuccino', 'Cappuccino', 'Cappuccino']",45
+1636274170,2021-11-07 16:36:10,['Cafe Latte'],12
