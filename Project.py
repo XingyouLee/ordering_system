@@ -75,29 +75,15 @@ def imagemaker(path, sizex, sizey):
 login_status = 0
 
 
-def login_info():
-    def login_confirm():
-        tkinter.messagebox.showinfo(title='Hi', message='Login successfully')
-        login_status = 1
-
-        top.destroy()
-        login_button.grid_forget()
-        login2_button = tk.Button(frame_home, text="User", command=login_info, width=5, height=2)
-        login2_button.grid(row=0, column=0)
-
-    top = tk.Toplevel()
-    top.title("Login")
-    top.geometry("300x200")
-    e1 = tk.Entry(top, show=None, font=('Arial', 14))
-    e2 = tk.Entry(top, show='*', font=('Arial', 14))
-    e1.place(x=30, y=20)
-    e2.place(x=30, y=50)
-
-    b = tk.Button(top, text="Login", command=login_confirm)
-    b.place(x=100, y=100)
 
 
-def info_command():
+
+def info_command(userlevel):
+    if userlevel != 0:
+        tk.messagebox.showerror(title='Error', message='Permission denied')
+        return
+    global root
+    global frame_home
     frame_home.place_forget()
     item_data, item_menu, storage = check_info()
 
@@ -248,6 +234,8 @@ def info_command():
 
 
 def rank_command():
+    global root
+    global frame_home
     frame_home.place_forget()
 
     def return_command():
@@ -294,6 +282,8 @@ def rank_command():
 
 
 def buy_command():
+    global root
+    global frame_home
     frame_home.place_forget()
     item_data, item_menu, storage = check_info()
     global ItemOrderList
@@ -403,33 +393,72 @@ def buy_command():
 def people_command():
     pass
 
+def home_command(username, user_level):
+    global root
+    root = tk.Tk()
+    root.title("Wuhu tech")
+    root.geometry("1600x900")
+    global frame_home
+    frame_home = tk.Frame(root)
 
-root = tk.Tk()
-root.title("Wuhu tech")
-root.geometry("1600x900")
+    # login_image = imagemaker("login.jpg", 50, 50)
+    login_button = tk.Button(frame_home, text="username: %s\n userlevel: %s"%(username,user_level),
+                            width=8, height=5, font=('Arial', 14))
+    login_button.grid(row=0, column=0)
 
-frame_home = tk.Frame(root)
+    buy_image = imagemaker("food.png", 250, 200)
+    buy_button = tk.Button(frame_home, image=buy_image, command=buy_command, width=250, height=200, padx=10, pady=10)
+    buy_button.grid(row=5, column=1, padx=10, pady=10)
 
-login_image = imagemaker("login.jpg", 50, 50)
-login_button = tk.Button(frame_home, image=login_image, command=login_info)
-login_button.grid(row=0, column=0)
+    info_image = imagemaker("info.jpg", 250, 200)
+    info_button = tk.Button(frame_home, image=info_image, command=lambda: info_command(user_level), width=250, height=200, padx=10, pady=10)
+    info_button.grid(row=5, column=2, padx=10, pady=10)
 
-buy_image = imagemaker("food.png", 250, 200)
-buy_button = tk.Button(frame_home, image=buy_image, command=buy_command, width=250, height=200, padx=10, pady=10)
-buy_button.grid(row=5, column=1, padx=10, pady=10)
+    contact_image = imagemaker("contact.jpg", 250, 200)
+    contact_button = tk.Button(frame_home, image=contact_image, command=rank_command, width=250, height=200, padx=10, pady=10)
+    contact_button.grid(row=5, column=3, padx=10, pady=10)
 
-info_image = imagemaker("info.jpg", 250, 200)
-info_button = tk.Button(frame_home, image=info_image, command=info_command, width=250, height=200, padx=10, pady=10)
-info_button.grid(row=5, column=2, padx=10, pady=10)
+    people_image = imagemaker("people.jpg", 250, 200)
+    people_button = tk.Button(frame_home, image=people_image, command=people_command, width=250, height=200, padx=10, pady=10)
+    people_button.grid(row=5, column=4, padx=10, pady=10)
 
-contact_image = imagemaker("contact.jpg", 250, 200)
-contact_button = tk.Button(frame_home, image=contact_image, command=rank_command, width=250, height=200, padx=10, pady=10)
-contact_button.grid(row=5, column=3, padx=10, pady=10)
+    frame_home.place(x=0, y=0)
+    frame_home.mainloop()
+    root.mainloop()
 
-people_image = imagemaker("people.jpg", 250, 200)
-people_button = tk.Button(frame_home, image=people_image, command=people_command, width=250, height=200, padx=10, pady=10)
-people_button.grid(row=5, column=4, padx=10, pady=10)
+def login_command():
+    def login_confirm():
+        id_get = e1.get()
+        password_get = e2.get()
+        user_info = pd.read_csv('user_information.csv')
+        res = user_info[user_info['id'].isin([int(id_get)])]
+        real_password = int(res["password"])
+        if real_password == int(password_get):
+            tk.messagebox.showinfo(title='Hi', message='Login successfully')
+            username = np.array(res["username"])
 
-frame_home.place(x=0, y=0)
-frame_home.mainloop()
-root.mainloop()
+            user_level = int(res["level"])
+            login_root.destroy()
+            home_command(username[0], user_level)
+        else:
+            tk.messagebox.showerror(title='Error', message='Wrong id or password!')
+
+
+    login_root = tk.Tk()
+    login_root.title("Login")
+    login_root.geometry("300x200")
+    id_label = tk.Label(login_root, text="ID", font=('Arial', 14))
+    password_label = tk.Label(login_root, text="password", font=('Arial', 14))
+    e1 = tk.Entry(login_root, show=None, font=('Arial', 14))
+    e2 = tk.Entry(login_root, show='*', font=('Arial', 14))
+    id_label.grid(row=2, column=2)
+    password_label.grid(row=3, column=2)
+    e1.grid(row=2, column=3)
+    e2.grid(row=3, column=3)
+
+
+    b = tk.Button(login_root, text="Login", command=login_confirm)
+    b.place(x=100, y=100)
+    login_root.mainloop()
+
+login_command()

@@ -39,5 +39,11 @@ import numpy as np
 # a = np.array([[1,1,1,1]])
 # print(a)
 
-record = pd.read_csv('order_record.csv')
-record = np.array(record)
+#  record = pd.read_csv('order_record.csv')
+# record = np.array(record)
+
+from Crypto.Cipher import AES
+obj = AES.new('This is a key123', AES.MODE_CBC, 'This is an IV456')
+message = "The answer is no"
+ciphertext = obj.encrypt(message)
+
