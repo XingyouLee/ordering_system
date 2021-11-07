@@ -72,8 +72,26 @@ def imagemaker(path, sizex, sizey):
     return ImageTk.PhotoImage(im)
 
 
-login_status = 0
+# 加密
+def enctry(s):
+ k = 'djq%5cu#-jeq15abg$z9_i#_w=$o88m!*alpbedlbat8cr74sd'
+ encry_str = ""
+ for i,j in zip(s,k):
+  # i为字符，j为秘钥字符
+  temp = str(ord(i)+ord(j))+'_' # 加密字符 = 字符的Unicode码 + 秘钥的Unicode码
+  encry_str = encry_str + temp
+ return encry_str
 
+
+# 解密
+def dectry(p):
+ k = 'djq%5cu#-jeq15abg$z9_i#_w=$o88m!*alpbedlbat8cr74sd'
+ dec_str = ""
+ for i,j in zip(p.split("_")[:-1],k):
+  # i 为加密字符，j为秘钥字符
+  temp = chr(int(i) - ord(j)) # 解密字符 = (加密Unicode码字符 - 秘钥字符的Unicode码)的单字节字符
+  dec_str = dec_str+temp
+ return dec_str
 
 
 
@@ -430,16 +448,17 @@ def login_command():
     def login_confirm():
         id_get = e1.get()
         password_get = e2.get()
-        user_info = pd.read_csv('user_information.csv')
-        res = user_info[user_info['id'].isin([int(id_get)])]
-        real_password = int(res["password"])
-        if real_password == int(password_get):
-            tk.messagebox.showinfo(title='Hi', message='Login successfully')
-            username = np.array(res["username"])
 
-            user_level = int(res["level"])
+        user_info = pd.read_csv('user_information.csv')
+        res = user_info[user_info['id'].isin([enctry(id_get)])]
+        real_password = res["password"]
+        if np.array(real_password)[0] == enctry(password_get):
+            tk.messagebox.showinfo(title='Hi', message='Login successfully')
+            username = dectry(np.array(res["username"])[0])
+
+            user_level = int(dectry(np.array(res["level"])[0]))
             login_root.destroy()
-            home_command(username[0], user_level)
+            home_command(username, user_level)
         else:
             tk.messagebox.showerror(title='Error', message='Wrong id or password!')
 

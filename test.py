@@ -47,3 +47,10 @@ obj = AES.new('This is a key123', AES.MODE_CBC, 'This is an IV456')
 message = "The answer is no"
 ciphertext = obj.encrypt(message)
 
+
+id,username,password,level
+148_,208_207_231_142_,208_207_231_142_101_,148_
+1,tkx,0,1
+2,ppy,0,1
+3,pzy,0,1
+
