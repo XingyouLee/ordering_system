@@ -74,26 +74,24 @@ def imagemaker(path, sizex, sizey):
 
 # 加密
 def enctry(s):
- k = 'djq%5cu#-jeq15abg$z9_i#_w=$o88m!*alpbedlbat8cr74sd'
- encry_str = ""
- for i,j in zip(s,k):
-  # i为字符，j为秘钥字符
-  temp = str(ord(i)+ord(j))+'_' # 加密字符 = 字符的Unicode码 + 秘钥的Unicode码
-  encry_str = encry_str + temp
- return encry_str
+    k = 'djq%5cu#-jeq15abg$z9_i#_w=$o88m!*alpbedlbat8cr74sd'
+    encry_str = ""
+    for i, j in zip(s, k):
+        # i为字符，j为秘钥字符
+        temp = str(ord(i) + ord(j)) + '_'  # 加密字符 = 字符的Unicode码 + 秘钥的Unicode码
+        encry_str = encry_str + temp
+    return encry_str
 
 
 # 解密
 def dectry(p):
- k = 'djq%5cu#-jeq15abg$z9_i#_w=$o88m!*alpbedlbat8cr74sd'
- dec_str = ""
- for i,j in zip(p.split("_")[:-1],k):
-  # i 为加密字符，j为秘钥字符
-  temp = chr(int(i) - ord(j)) # 解密字符 = (加密Unicode码字符 - 秘钥字符的Unicode码)的单字节字符
-  dec_str = dec_str+temp
- return dec_str
-
-
+    k = 'djq%5cu#-jeq15abg$z9_i#_w=$o88m!*alpbedlbat8cr74sd'
+    dec_str = ""
+    for i, j in zip(p.split("_")[:-1], k):
+        # i 为加密字符，j为秘钥字符
+        temp = chr(int(i) - ord(j))  # 解密字符 = (加密Unicode码字符 - 秘钥字符的Unicode码)的单字节字符
+        dec_str = dec_str + temp
+    return dec_str
 
 
 def info_command(userlevel):
@@ -263,7 +261,7 @@ def rank_command():
 
     def weekly_rank():
         record = pd.read_csv("order_record.csv")
-        record = record[record["id"]-time.time() < 604800]
+        record = record[record["id"] - time.time() < 604800]
         data = np.array2string(np.array(record["items"]))
         item_data, item_menu, storage = check_info()
         rank_info = {}
@@ -328,7 +326,6 @@ def rank_command():
         rank_frame.place(x=80, y=0)
         rank_frame.mainloop()  # Or the image will be blank
 
-
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
     rank_frame = tk.Frame(root)
@@ -339,7 +336,6 @@ def rank_command():
     weekly_rank.grid(row=1, column=0)
     allthetime_rank.grid(row=2, column=0)
     rank_frame.place(x=80, y=0)
-
 
 
 def buy_command():
@@ -454,6 +450,7 @@ def buy_command():
 def people_command():
     pass
 
+
 def home_command(username, user_level):
     global root
     root = tk.Tk()
@@ -462,9 +459,8 @@ def home_command(username, user_level):
     global frame_home
     frame_home = tk.Frame(root)
 
-    # login_image = imagemaker("login.jpg", 50, 50)
-    login_button = tk.Button(frame_home, text="username: %s\n userlevel: %s"%(username,user_level),
-                            width=8, height=5, font=('Arial', 14))
+    login_button = tk.Button(frame_home, text="username: %s\n userlevel: %s" % (username, user_level),
+                             width=12, height=5, font=('Arial', 14))
     login_button.grid(row=0, column=0)
 
     buy_image = imagemaker("food.png", 250, 200)
@@ -472,20 +468,24 @@ def home_command(username, user_level):
     buy_button.grid(row=5, column=1, padx=10, pady=10)
 
     info_image = imagemaker("info.jpg", 250, 200)
-    info_button = tk.Button(frame_home, image=info_image, command=lambda: info_command(user_level), width=250, height=200, padx=10, pady=10)
+    info_button = tk.Button(frame_home, image=info_image, command=lambda: info_command(user_level), width=250,
+                            height=200, padx=10, pady=10)
     info_button.grid(row=5, column=2, padx=10, pady=10)
 
-    contact_image = imagemaker("contact.jpg", 250, 200)
-    contact_button = tk.Button(frame_home, image=contact_image, command=rank_command, width=250, height=200, padx=10, pady=10)
-    contact_button.grid(row=5, column=3, padx=10, pady=10)
+    rank_image = imagemaker("rank.jpg", 250, 200)
+    rank_button = tk.Button(frame_home, image=rank_image, command=rank_command, width=250, height=200, padx=10,
+                               pady=10)
+    rank_button.grid(row=5, column=3, padx=10, pady=10)
 
     people_image = imagemaker("people.jpg", 250, 200)
-    people_button = tk.Button(frame_home, image=people_image, command=people_command, width=250, height=200, padx=10, pady=10)
+    people_button = tk.Button(frame_home, image=people_image, command=people_command, width=250, height=200, padx=10,
+                              pady=10)
     people_button.grid(row=5, column=4, padx=10, pady=10)
 
     frame_home.place(x=0, y=0)
     frame_home.mainloop()
     root.mainloop()
+
 
 def login_command():
     def login_confirm():
@@ -505,7 +505,6 @@ def login_command():
         else:
             tk.messagebox.showerror(title='Error', message='Wrong id or password!')
 
-
     login_root = tk.Tk()
     login_root.title("Login")
     login_root.geometry("300x200")
@@ -518,10 +517,10 @@ def login_command():
     e1.grid(row=2, column=3)
     e2.grid(row=3, column=3)
 
-
     b = tk.Button(login_root, text="Login", command=login_confirm)
     b.place(x=100, y=100)
     login_root.mainloop()
 
+
 # login_command()
-home_command(0,0)
+home_command(0, 0)
