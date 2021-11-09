@@ -34,6 +34,12 @@ class Storage(object):
         self.sugar = sugar
         self.cheese = cheese
 
+    def check_storage(self):
+        a = [self.water, self.coco, self.milk, self.sugar, self.cheese]
+        for i in a:
+            if i < 50:
+                return False
+        return True
 
 def check_info():
     item_data = pd.read_csv('items_category.csv')
@@ -257,6 +263,7 @@ def rank_command():
     def return_command():
         return_b.grid_forget()
         rank_frame.destroy()
+        frame_record.destroy()
         frame_home.place(x=20, y=5)
 
     def weekly_rank():
@@ -321,7 +328,7 @@ def rank_command():
         plt.savefig("rank_img.jpg")
 
         rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
-        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
+        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10)
         rank_label.grid(row=0, column=0)
         rank_frame.place(x=80, y=0)
         rank_frame.mainloop()  # Or the image will be blank
@@ -329,13 +336,44 @@ def rank_command():
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
     rank_frame = tk.Frame(root)
-    record = pd.read_csv('order_record.csv')
+    weekly_rank()
     # 两个button
+
     weekly_rank = tk.Button(rank_frame, text="Weekly ranking", command=weekly_rank, width=15, height=2)
     allthetime_rank = tk.Button(rank_frame, text="All the time ranking", command=allthetime_rank, width=15, height=2)
     weekly_rank.grid(row=1, column=0)
     allthetime_rank.grid(row=2, column=0)
     rank_frame.place(x=80, y=0)
+
+    frame_record = tk.Frame(root)
+    sb = tk.Scrollbar(frame_record)
+    # sb.grid(row=0, column=0)
+    sb.pack(side="right", fill="y")
+    lb = tk.Listbox(frame_record, yscrollcommand=sb.set, width=60, height=40)
+
+    def standardize(a, b, c):
+        res = 55 - len(a) - len(b) - len(str(c))
+        if res <0:
+            return a+"   "+b[:(55-len(a)-len(str(c)))]+ "     " + str(c)
+        else:
+            for m in range(2*res):
+                b += " "
+            return a+"   "+b+str(c)
+
+    record = pd.read_csv('order_record.csv')
+    data = np.array(record)
+    for i in range(len(data)):
+        # lb.insert("end", data[i][1] + "   " + data[i][2][:30]+ "   " + str(data[i][3]))
+        lb.insert("end", standardize(data[i][1], data[i][2], data[i][3]))
+    # lb.grid(row=0, column=1)
+    lb.pack(side="left", fill="both")
+    sb.config(command=lb.yview)
+
+    frame_record.place(x=1000, y=50)
+
+
+
+
 
 
 def buy_command():
@@ -410,6 +448,9 @@ def buy_command():
         ItemOrderList = []
         count_total_price()
 
+
+
+
     def order_the_list():
         total_price = 0
         for i in ItemOrderList:
@@ -419,7 +460,8 @@ def buy_command():
             storage.sugar -= i.sugar
             storage.cheese -= i.cheese
             total_price += i.price
-
+        if not storage.check_storage():
+            tk.messagebox.showerror(title='Error', message='Low storage')
         # update
         update_storage(storage)
         update_order()
@@ -509,18 +551,19 @@ def login_command():
     login_root.title("Login")
     login_root.geometry("300x200")
     id_label = tk.Label(login_root, text="ID", font=('Arial', 14))
-    password_label = tk.Label(login_root, text="password", font=('Arial', 14))
+    password_label = tk.Label(login_root, text="Password", font=('Arial', 14))
     e1 = tk.Entry(login_root, show=None, font=('Arial', 14))
     e2 = tk.Entry(login_root, show='*', font=('Arial', 14))
-    id_label.grid(row=2, column=2)
-    password_label.grid(row=3, column=2)
-    e1.grid(row=2, column=3)
-    e2.grid(row=3, column=3)
+    blank = tk.Label(login_root, text=" ")
+    blank.grid(row=2, column=2)
+    id_label.grid(row=5, column=2)
+    password_label.grid(row=6, column=2)
+    e1.grid(row=5, column=3)
+    e2.grid(row=6, column=3)
 
     b = tk.Button(login_root, text="Login", command=login_confirm)
-    b.place(x=100, y=100)
+    b.place(x=100, y=150)
     login_root.mainloop()
-
 
 # login_command()
 home_command(0, 0)
