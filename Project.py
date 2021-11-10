@@ -585,7 +585,7 @@ def login_command():
         register_e2.grid(row=6, column=3)
 
         b = tk.Button(register_top, text="Register", command=register_confirm)
-        b.place(x=50, y=150)
+        b.place(x=100, y=150)
 
     login_root = tk.Tk()
     login_root.title("Login")
