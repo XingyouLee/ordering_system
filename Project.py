@@ -201,7 +201,7 @@ def info_command(userlevel):
                                                                           + " milk: " + str(
             item_menu[i].milk) + " sugar: " + str(item_menu[i].sugar) + " cheese: " + str(item_menu[i].cheese),
                                   command=lambda f=item_menu[i]: change_item(f))
-        ButtonList[i].grid()
+        ButtonList[i].grid(pady=5)
 
     items_choices.place(x=150, y=10)
     frame_info.place(x=20, y=5)
@@ -265,7 +265,12 @@ def rank_command():
         rank_frame.destroy()
         frame_record.destroy()
         frame_home.place(x=20, y=5)
-
+    def place_fig():
+        rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
+        rank_label.grid(row=0, column=0)
+        rank_frame.place(x=80, y=0)
+        rank_frame.mainloop()  # Or the image will be blank
     def weekly_rank():
         record = pd.read_csv("order_record.csv")
         record = record[record["id"] - time.time() < 604800]
@@ -294,11 +299,11 @@ def rank_command():
             plt.text(y + 0.2, x - 0.1, '%s' % y)
         plt.savefig("rank_img.jpg")
 
-        rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
-        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
-        rank_label.grid(row=0, column=0)
-        rank_frame.place(x=80, y=0)
-        rank_frame.mainloop()  # Or the image will be blank
+        # rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+        # rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
+        # rank_label.grid(row=0, column=0)
+        # rank_frame.place(x=80, y=0)
+        # rank_frame.mainloop()  # Or the image will be blank
 
     def allthetime_rank():
         record = pd.read_csv("order_record.csv")
@@ -327,22 +332,25 @@ def rank_command():
             plt.text(y + 0.2, x - 0.1, '%s' % y)
         plt.savefig("rank_img.jpg")
 
-        rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
-        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10)
-        rank_label.grid(row=0, column=0)
-        rank_frame.place(x=80, y=0)
-        rank_frame.mainloop()  # Or the image will be blank
+        # rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+        # rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10)
+        # rank_label.grid(row=0, column=0)
+        # rank_frame.place(x=80, y=0)
+        # rank_frame.mainloop()  # Or the image will be blank
 
     return_b = tk.Button(root, text="Home", command=return_command, width=3, height=2, padx=10, pady=10)
     return_b.grid(row=0, column=0)
     rank_frame = tk.Frame(root)
     weekly_rank()
-    # 两个button
 
-    weekly_rank = tk.Button(rank_frame, text="Weekly ranking", command=weekly_rank, width=15, height=2)
-    allthetime_rank = tk.Button(rank_frame, text="All the time ranking", command=allthetime_rank, width=15, height=2)
+    allthetime_rank()
+    # 两个button
+    button_frame = tk.Frame(root)
+    weekly_rank = tk.Button(button_frame, text="Weekly ranking", command=place_fig, width=15, height=2)
+    allthetime_rank = tk.Button(button_frame, text="All the time ranking", command=place_fig, width=15, height=2)
     weekly_rank.grid(row=1, column=0)
     allthetime_rank.grid(row=2, column=0)
+    button_frame.place(x=120, y=800)
     rank_frame.place(x=80, y=0)
 
     frame_record = tk.Frame(root)
@@ -370,7 +378,7 @@ def rank_command():
     sb.config(command=lb.yview)
 
     frame_record.place(x=1000, y=50)
-
+    place_fig()  # show weekly_rank by default
 
 
 
@@ -565,5 +573,5 @@ def login_command():
     b.place(x=100, y=150)
     login_root.mainloop()
 
-# login_command()
-home_command(0, 0)
+login_command()
+# home_command(0, 0)
