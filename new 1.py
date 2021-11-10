@@ -556,40 +556,40 @@ def login_command():
             tk.messagebox.showerror(title='Error', message='Wrong id or password!')
     
     
-    def registe_command():
-        def registe_confirm():
-            registe_name_get = registe_e1.get()
-            registe_password_get = e2.get()
-            registe_name = enctry(registe_name_get)
-            registe_password = enctry(registe_password_get)
+    def register_command():
+        def register_confirm():
+            register_name_get = register_e1.get()
+            register_password_get = register_e2.get()
+            register_name = enctry(register_name_get)
+            register_password = enctry(register_password_get)
             
             user_info = pd.read_csv('user_information.csv')
-            registe_id = enctry(str(len(user_info["id"])))
-            
-            df = pd.DataFrame([registe_id, registe_name, registe_password]).T
+            user_id = str(len(user_info["id"]))
+            register_id = enctry(user_id)
+            df = pd.DataFrame([register_id, register_name, register_password, enctry(str(2))]).T
             df.columns = user_info.columns
             df_new = pd.concat([user_info, df], ignore_index=True)
 
             df_new.to_csv("user_information.csv", index=0)   
-            registe_top.destroy()
+            register_top.destroy()
+            tk.messagebox.showinfo(title='Registry successfully', message='Your user id is %s'%user_id)
         
-        
-        registe_top = tk.Toplevel()
-        registe_top.title("Login")
-        registe_top.geometry("300x200")
-        registe_name_label = tk.Label(registe_top, text="Name", font=('Arial', 14))
-        registe_password_label = tk.Label(registe_top, text="Password", font=('Arial', 14))
-        registe_e1 = tk.Entry(registe_top, show=None, font=('Arial', 14))
-        registe_e2 = tk.Entry(registe_top, show='*', font=('Arial', 14))
-        registe_blank = tk.Label(registe_top, text=" ")
-        registe_blank.grid(row=2, column=2)
-        registe_name_label.grid(row=5, column=2)
-        registe_password_label.grid(row=6, column=2)
-        registe_e1.grid(row=5, column=3)
-        registe_e2.grid(row=6, column=3)
+        register_top = tk.Toplevel()
+        register_top.title("Login")
+        register_top.geometry("300x200")
+        register_name_label = tk.Label(register_top, text="Name", font=('Arial', 14))
+        register_password_label = tk.Label(register_top, text="Password", font=('Arial', 14))
+        register_e1 = tk.Entry(register_top, show=None, font=('Arial', 14))
+        register_e2 = tk.Entry(register_top, show='*', font=('Arial', 14))
+        register_blank = tk.Label(register_top, text=" ")
+        register_blank.grid(row=2, column=2)
+        register_name_label.grid(row=5, column=2)
+        register_password_label.grid(row=6, column=2)
+        register_e1.grid(row=5, column=3)
+        register_e2.grid(row=6, column=3)
 
 
-        b = tk.Button(registe_top, text="Registe", command=registe_confirm)
+        b = tk.Button(register_top, text="Register", command=register_confirm)
         b.place(x=50, y=150)
         
         
@@ -616,8 +616,8 @@ def login_command():
     b.place(x=50, y=150)
     
     
-    registe = tk.Button(login_root, text="Registe", command=registe_command)
-    registe.place(x=150, y=150)
+    register = tk.Button(login_root, text="Register", command=register_command)
+    register.place(x=150, y=150)
     
     
     login_root.mainloop()
