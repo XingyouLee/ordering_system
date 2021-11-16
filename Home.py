@@ -1,17 +1,14 @@
 import tkinter as tk
-from tkinter import font
-from PIL import Image, ImageTk
+
 import tkinter.messagebox
-import items
-from PIL.Image import composite
+
 import csv
 import numpy as np
 import pandas as pd
 import time
 import re
 import matplotlib.pyplot as plt
-import matplotlib
-
+from PIL import Image, ImageTk
 
 class Item(object):
 
@@ -40,26 +37,6 @@ class Storage(object):
             if i < 50:
                 return False
         return True
-
-
-def check_info():
-    item_data = pd.read_csv('items_category.csv')
-    item_menu = []
-    item_data = np.array(item_data)
-
-    # for row in f_csv:
-    #     print(np.size(row))
-    for i in item_data:
-        # item_menu.append(Item(i[0], int(i[1]), int(i[2]), int(i[3]), int(i[4]), int(i[5]), int(i[6])))
-        item_menu.append(Item(i[0], i[1], i[2], i[3], i[4], i[5], i[6]))
-
-    storage_data = pd.read_csv('material_storage.csv')
-
-    data = np.array(storage_data)
-
-    storage = Storage(data[0][0], data[0][1], data[0][2], data[0][3], data[0][4])
-
-    return item_data, item_menu, storage
 
 
 def update_storage(storage):
@@ -100,6 +77,24 @@ def dectry(p):
         dec_str = dec_str + temp
     return dec_str
 
+def check_info():
+    item_data = pd.read_csv('items_category.csv')
+    item_menu = []
+    item_data = np.array(item_data)
+
+    # for row in f_csv:
+    #     print(np.size(row))
+    for i in item_data:
+        # item_menu.append(Item(i[0], int(i[1]), int(i[2]), int(i[3]), int(i[4]), int(i[5]), int(i[6])))
+        item_menu.append(Item(i[0], i[1], i[2], i[3], i[4], i[5], i[6]))
+
+    storage_data = pd.read_csv('material_storage.csv')
+
+    data = np.array(storage_data)
+
+    storage = Storage(data[0][0], data[0][1], data[0][2], data[0][3], data[0][4])
+
+    return item_data, item_menu, storage
 
 def info_command(userlevel):
     if userlevel != 0:
@@ -265,26 +260,18 @@ def rank_command():
         return_b.grid_forget()
         rank_frame.destroy()
         frame_record.destroy()
-        button_frame.destroy()
         frame_home.place(x=20, y=5)
 
-    def place_fig1():
-        rank_img = ImageTk.PhotoImage(Image.open("rank_img_weekly.jpg"))
-        rank_label = tk.Label(rank_frame, image=rank_img, width=500, height=500, padx=10, pady=10)
-        rank_label.grid(row=0, column=0)
-        rank_frame.place(x=80, y=0)
-        rank_frame.mainloop()  # Or the image will be blank
-
-    def place_fig2():
-        rank_img = ImageTk.PhotoImage(Image.open("rank_img_allthetime.jpg"))
-        rank_label = tk.Label(rank_frame, image=rank_img, width=500, height=500, padx=10, pady=10)
+    def place_fig():
+        rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
+        rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
         rank_label.grid(row=0, column=0)
         rank_frame.place(x=80, y=0)
         rank_frame.mainloop()  # Or the image will be blank
 
     def weekly_rank():
         record = pd.read_csv("order_record.csv")
-        record = record[time.time()-record["id"]  < 604800]
+        record = record[record["id"] - time.time() < 604800]
         data = np.array2string(np.array(record["items"]))
         item_data, item_menu, storage = check_info()
         rank_info = {}
@@ -300,7 +287,7 @@ def rank_command():
             count.append(i[1])
             tick.append(i[0])
 
-        plt.figure(figsize=(5, 5))
+        plt.figure(figsize=(7, 7))
         plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
         plt.yticks(range(len(count)), tick)
         plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
@@ -308,7 +295,7 @@ def rank_command():
         plt.title("Ranking")
         for x, y in enumerate(count):
             plt.text(y + 0.2, x - 0.1, '%s' % y)
-        plt.savefig("rank_img_weekly.jpg")
+        plt.savefig("rank_img.jpg")
 
         # rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
         # rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10, pady=10)
@@ -333,7 +320,7 @@ def rank_command():
             count.append(i[1])
             tick.append(i[0])
 
-        plt.figure(figsize=(5, 5))
+        plt.figure(figsize=(7, 7))
         plt.barh(range(len(count)), count, height=0.7, color='steelblue', alpha=0.8)  # 从下往上画
         plt.yticks(range(len(count)), tick)
         plt.xlim(0, int(rank_info_ordered[-1][1]) * 1.1)
@@ -341,7 +328,7 @@ def rank_command():
         plt.title("Ranking")
         for x, y in enumerate(count):
             plt.text(y + 0.2, x - 0.1, '%s' % y)
-        plt.savefig("rank_img_allthetime.jpg")
+        plt.savefig("rank_img.jpg")
 
         # rank_img = ImageTk.PhotoImage(Image.open("rank_img.jpg"))
         # rank_label = tk.Label(rank_frame, image=rank_img, width=800, height=800, padx=10)
@@ -357,12 +344,12 @@ def rank_command():
     allthetime_rank()
     # 两个button
     button_frame = tk.Frame(root)
-    weekly_rank = tk.Button(button_frame, text="Weekly ranking", command=place_fig1, width=15, height=2)
-    allthetime_rank = tk.Button(button_frame, text="All the time ranking", command=place_fig2, width=15, height=2)
+    weekly_rank = tk.Button(button_frame, text="Weekly ranking", command=place_fig, width=15, height=2)
+    allthetime_rank = tk.Button(button_frame, text="All the time ranking", command=place_fig, width=15, height=2)
     weekly_rank.grid(row=1, column=0)
     allthetime_rank.grid(row=2, column=0)
-    button_frame.place(x=120, y=600)
-    rank_frame.place(x=10, y=0)
+    button_frame.place(x=120, y=800)
+    rank_frame.place(x=80, y=0)
 
     frame_record = tk.Frame(root)
     sb = tk.Scrollbar(frame_record)
@@ -388,8 +375,8 @@ def rank_command():
     lb.pack(side="left", fill="both")
     sb.config(command=lb.yview)
 
-    frame_record.place(x=600, y=50)
-    place_fig1()  # show weekly_rank by default
+    frame_record.place(x=1000, y=50)
+    place_fig()  # show weekly_rank by default
 
 
 def buy_command():
@@ -489,8 +476,8 @@ def buy_command():
     order_list_frame.place(x=300, y=100)
 
     payment_frame = tk.Frame(root)
-    bill = tk.Label(payment_frame, text="   $  0", font=('Arial', 14), width=15)
-    bill.grid(row=0, column=12)
+    payment_bill = tk.Label(payment_frame, text="$  0", font=('Arial', 14))
+    payment_bill.grid(row=0, column=12)
 
     clear_button = tk.Button(payment_frame, text="clear", command=clear_ordering_list, width=3, height=2, padx=10,
                              pady=10)
@@ -510,7 +497,7 @@ def home_command(username, user_level):
     global root
     root = tk.Tk()
     root.title("Wuhu tech")
-    root.geometry("1500x800")
+    root.geometry("1600x900")
     global frame_home
     frame_home = tk.Frame(root)
 
@@ -540,88 +527,3 @@ def home_command(username, user_level):
     frame_home.place(x=0, y=0)
     frame_home.mainloop()
     root.mainloop()
-
-
-def login_command():
-    def login_confirm():
-        id_get = e1.get()
-        password_get = e2.get()
-        if len(password_get)==0 or len(id_get)==0:
-            tk.messagebox.showerror(title='Error', message='Fill your id or password!')
-        else:
-            user_info = pd.read_csv('user_information.csv')
-            res = user_info[user_info['id'].isin([enctry(id_get)])]
-            if len(res) == 0:
-                tk.messagebox.showerror(title='Error', message='Wrong id or password!')
-            else:
-                real_password = res["password"]
-                if np.array(real_password)[0] == enctry(password_get):
-                    tk.messagebox.showinfo(title='Hi', message='Login successfully')
-                    username = dectry(np.array(res["username"])[0])
-
-                    user_level = int(dectry(np.array(res["level"])[0]))
-                    login_root.destroy()
-                    home_command(username, user_level)
-                else:
-                    tk.messagebox.showerror(title='Error', message='Wrong id or password!')
-
-    def register_command():
-        def register_confirm():
-            register_name_get = register_e1.get()
-            register_password_get = register_e2.get()
-            register_name = enctry(register_name_get)
-            register_password = enctry(register_password_get)
-
-            user_info = pd.read_csv('user_information.csv')
-            user_id = str(len(user_info["id"]))
-            register_id = enctry(user_id)
-            df = pd.DataFrame([register_id, register_name, register_password, enctry(str(2))]).T
-            df.columns = user_info.columns
-            df_new = pd.concat([user_info, df], ignore_index=True)
-
-            df_new.to_csv("user_information.csv", index=0)
-            register_top.destroy()
-            tk.messagebox.showinfo(title='Registry successfully', message='Your user id is %s' % user_id)
-
-        register_top = tk.Toplevel()
-        register_top.title("Login")
-        register_top.geometry("300x200")
-        register_name_label = tk.Label(register_top, text="Name", font=('Arial', 14))
-        register_password_label = tk.Label(register_top, text="Password", font=('Arial', 14))
-        register_e1 = tk.Entry(register_top, show=None, font=('Arial', 14))
-        register_e2 = tk.Entry(register_top, show='*', font=('Arial', 14))
-        register_blank = tk.Label(register_top, text=" ")
-        register_blank.grid(row=2, column=2)
-        register_name_label.grid(row=5, column=2)
-        register_password_label.grid(row=6, column=2)
-        register_e1.grid(row=5, column=3)
-        register_e2.grid(row=6, column=3)
-
-        b = tk.Button(register_top, text="Register", command=register_confirm)
-        b.place(x=100, y=150)
-
-    login_root = tk.Tk()
-    login_root.title("Login")
-    login_root.geometry("300x200")
-    id_label = tk.Label(login_root, text="ID", font=('Arial', 14))
-    password_label = tk.Label(login_root, text="Password", font=('Arial', 14))
-    e1 = tk.Entry(login_root, show=None, font=('Arial', 14))
-    e2 = tk.Entry(login_root, show='*', font=('Arial', 14))
-    blank = tk.Label(login_root, text=" ")
-    blank.grid(row=2, column=2)
-    id_label.grid(row=5, column=2)
-    password_label.grid(row=6, column=2)
-    e1.grid(row=5, column=3)
-    e2.grid(row=6, column=3)
-
-    b = tk.Button(login_root, text="Login", command=login_confirm)
-    b.place(x=50, y=150)
-
-    register = tk.Button(login_root, text="Register", command=register_command)
-    register.place(x=150, y=150)
-
-    login_root.mainloop()
-
-
-# login_command()
-home_command(0, 0)

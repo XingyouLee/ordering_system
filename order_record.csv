@@ -23,3 +23,24 @@ id,date,items,total_price
 1636464145,2021-11-09 21:22:24,"['Cappuccino', 'Cappuccino']",30
 1636464318,2021-11-09 21:25:17,['Espresso'],8
 1636464337,2021-11-09 21:25:37,"['Espresso', 'Cappuccino', 'Cappuccino']",38
+1636597266,2021-11-11 10:21:05,"['Americano', 'Cappuccino', 'Espresso']",33
+1636597268,2021-11-11 10:21:08,"['Cafe Latte', 'Cappuccino', 'Cappuccino']",42
+1636597271,2021-11-11 10:21:10,"['Cappuccino', 'Cafe Latte', 'Cappuccino', 'Cappuccino']",57
+1636597276,2021-11-11 10:21:16,"['Cappuccino', 'Americano', 'Cafe Latte']",37
+1636946928,2021-11-15 11:28:48,"['Cappuccino', 'Cappuccino', 'Cafe Latte']",42
+1636946930,2021-11-15 11:28:50,"['Americano', 'Cafe Latte', 'Cafe Latte']",34
+1636946933,2021-11-15 11:28:52,"['Espresso', 'Espresso', 'Cappuccino', 'Cappuccino']",46
+1636946935,2021-11-15 11:28:54,"['Espresso', 'Americano', 'Espresso', 'Cafe Latte', 'Cafe Latte']",50
+1636946937,2021-11-15 11:28:56,"['Espresso', 'Cappuccino', 'Cappuccino']",38
+1637061926,2021-11-16 19:25:25,"['Cappuccino', 'Cappuccino', 'Espresso', 'Espresso', 'Espresso']",54
+1637061929,2021-11-16 19:25:28,"['Americano', 'Americano', 'Cafe Latte', 'Espresso', 'Cappuccino']",55
+1637061936,2021-11-16 19:25:35,"['Espresso', 'Espresso', 'Espresso', 'Espresso', 'Cappuccino', 'Cappuccino', 'Americano', 'Cafe Latte', 'Cafe Latte', 'Cafe Latte']",108
+1637061941,2021-11-16 19:25:41,"['Americano', 'Cappuccino', 'Cafe Latte', 'Cafe Latte', 'Espresso']",57
+1637061946,2021-11-16 19:25:46,"['Americano', 'Espresso', 'Espresso', 'Cafe Latte']",38
+1637062196,2021-11-16 19:29:55,"['Cappuccino', 'Cafe Latte']",27
+1637062263,2021-11-16 19:31:03,"['Cappuccino', 'Cappuccino', 'Cafe Latte']",42
+1637062274,2021-11-16 19:31:14,"['Cappuccino', 'Espresso']",23
+1637062290,2021-11-16 19:31:29,"['Cappuccino', 'Espresso']",23
+1637062293,2021-11-16 19:31:33,"['Cappuccino', 'Cappuccino']",30
+1637062296,2021-11-16 19:31:36,"['Americano', 'Cappuccino', 'Cappuccino', 'Cappuccino']",55
+1637062308,2021-11-16 19:31:48,"['Espresso', 'Americano', 'Espresso']",26
