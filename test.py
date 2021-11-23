@@ -43,6 +43,5 @@ import numpy as np
 # record = np.array(record)
 import Project
 
-from Project import login_command
-login_command()
-
+import pedestrian.demo as pd
+print(pd.name)
