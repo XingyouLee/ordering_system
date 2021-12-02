@@ -11,9 +11,11 @@ import numpy as np
 import pandas as pd
 import time
 import re
-
+from PyQt5.QtWidgets import  QFileDialog
 import matplotlib.pyplot as plt
-from pylab import mpl
+from PyQt5 import QtCore, QtGui, QtWidgets, Qt
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 
 from people_flow import people_flow
 
@@ -529,7 +531,49 @@ def people_command():
     # filepath = filedialog.askopenfilename(initialdir = os.getcwd(), filetypes = [("video files","*.flv")])
     # print(filepath)
 
-    total_num, area_num = people_flow()
+    class Ui_MainWindow(QtWidgets.QMainWindow):
+
+        def __init__(self):
+            super(Ui_MainWindow, self).__init__()
+            self.setupUi(self)
+            self.retranslateUi(self)
+
+        def setupUi(self, MainWindow):
+            MainWindow.setObjectName("MainWindow")
+            MainWindow.resize(300, 100)
+            self.centralWidget = QtWidgets.QWidget(MainWindow)
+            self.centralWidget.setObjectName("centralWidget")
+            self.retranslateUi(MainWindow)
+
+            self.pushButton = QtWidgets.QPushButton(self.centralWidget)
+            self.pushButton.setGeometry(QtCore.QRect(100, 30, 100, 50))
+            self.pushButton.setObjectName("pushButton")
+            self.pushButton.setText("打开")
+            MainWindow.setCentralWidget(self.centralWidget)
+            QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+            self.pushButton.clicked.connect(lambda: self.openfile(MainWindow))
+        def retranslateUi(self, MainWindow):
+            _translate = QtCore.QCoreApplication.translate
+            MainWindow.setWindowTitle(_translate("MainWindow", "选择文件"))
+
+        def openfile(self,MainWindow):
+            global openfile_name
+            openfile_name = QFileDialog.getOpenFileName(self, '选择文件', '', 'Video files(*.flv , *.mp4)')
+            MainWindow.close()
+
+    global openfile_name
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    app.exec_()
+
+
+    print(openfile_name[0])
+    total_num, area_num = people_flow(openfile_name[0])
 
 
 
@@ -599,6 +643,10 @@ def people_command():
     im = Image.open('flow.png')
     im.show()
 
+def log_out_command():
+    root.destroy()
+    login_command()
+
 def home_command(username, user_level):
     global root
     root = tk.Tk()
@@ -629,6 +677,10 @@ def home_command(username, user_level):
     people_button = tk.Button(frame_home, image=people_image, command=people_command, width=250, height=200, padx=10,
                               pady=10)
     people_button.grid(row=5, column=4, padx=10, pady=10)
+
+    log_out_button = tk.Button(frame_home, text="Log out",
+                             width=12, height=5, font=('Arial', 14), command = log_out_command)
+    log_out_button.grid(row=2, column=0)
 
     frame_home.place(x=0, y=0)
     frame_home.mainloop()
